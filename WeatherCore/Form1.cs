@@ -668,18 +668,19 @@ namespace WeatherCore
             _conditions = JsonSerializer.Deserialize<List<WeatherCondition>>(json);
         }
 
-        public Dictionary<string, bool> GetRussianConditionText(string condition_text)
+        public void GetRussianConditionText(string condition_text)
         {
-            foreach (var item in _conditions)
-            {
-                var ru_lang = item.languages.FirstOrDefault(l => l.lang_iso == "ru");
-                if (ru_lang != null)
-                {
+            
+            //foreach (var item in _conditions)
+            //{
+            //    var ru_lang = item.languages.FirstOrDefault(l => l.lang_iso == "ru");
+            //    if (ru_lang != null)
+            //    {
                     
-                }
-            }
-            var condition = _conditions?.FirstOrDefault(c => c.code == code);
-            var ru = condition?.languages?.FirstOrDefault(l => l.lang_iso == "ru");
+            //    }
+            //}
+            //var condition = _conditions?.FirstOrDefault(c => c.code == code);
+            //var ru = condition?.languages?.FirstOrDefault(l => l.lang_iso == "ru");
         }
     }
 }
