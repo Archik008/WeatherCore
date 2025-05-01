@@ -687,6 +687,7 @@ namespace WeatherCore
             //var condition = _conditions?.FirstOrDefault(c => c.code == code);
             //var ru = condition?.languages?.FirstOrDefault(l => l.lang_iso == "ru");
             // не работает переделывай
+            //?
         }
     }
 }
