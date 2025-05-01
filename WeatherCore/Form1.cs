@@ -179,6 +179,7 @@ namespace WeatherCore
                 var today = weather.Forecast.ForecastDay.FirstOrDefault();
                 return today;
             }
+            Debug.WriteLine("Test commit");
             return null;
         }
 
