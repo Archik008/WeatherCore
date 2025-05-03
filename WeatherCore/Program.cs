@@ -1,17 +1,28 @@
-namespace WeatherCore
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WeatherCore;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
-        }
+        var host = CreateHostBuilder().Build();
+
+        ApplicationConfiguration.Initialize();
+        var form = host.Services.GetRequiredService<Form1>();
+        Application.Run(form);
     }
+
+    static IHostBuilder CreateHostBuilder() =>
+        Host.CreateDefaultBuilder()
+            .ConfigureServices((_, services) =>
+            {
+                services.AddDbContext<AppDbContext>();
+                services.AddScoped<ICityRepository, CityRepository>();
+                services.AddScoped<IDayWeatherRepository, DayWeatherRepository>();
+                services.AddScoped<IHourWeatherRepository, HourWeatherRepository>();
+                services.AddScoped<IWeatherService, WeatherService>();
+                services.AddScoped<Form1>(); // зарегистрируй форму тоже
+            });
 }
