@@ -139,7 +139,7 @@
             button2.Name = "button2";
             button2.Size = new Size(140, 32);
             button2.TabIndex = 3;
-            button2.Text = "Предудыщие дни";
+            button2.Text = "Другие дни";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -202,7 +202,7 @@
             label14.Name = "label14";
             label14.Size = new Size(131, 71);
             label14.TabIndex = 2;
-            label14.Text = "39%";
+            label14.Text = "...";
             // 
             // label13
             // 
@@ -211,7 +211,7 @@
             label13.Name = "label13";
             label13.Size = new Size(84, 17);
             label13.TabIndex = 1;
-            label13.Text = "Нормальная";
+            label13.Text = "Загрузка...";
             // 
             // label12
             // 
@@ -263,7 +263,7 @@
             label10.Name = "label10";
             label10.Size = new Size(43, 30);
             label10.TabIndex = 3;
-            label10.Text = "21°";
+            label10.Text = "...";
             // 
             // label9
             // 
@@ -305,7 +305,7 @@
             label19.Name = "label19";
             label19.Size = new Size(87, 17);
             label19.TabIndex = 2;
-            label19.Text = "Выше нормы";
+            label19.Text = "Загрузка...";
             // 
             // panel3
             // 
@@ -348,7 +348,7 @@
             label7.Name = "label7";
             label7.Size = new Size(71, 32);
             label7.TabIndex = 2;
-            label7.Text = "1 м/с";
+            label7.Text = "...";
             // 
             // label6
             // 
@@ -392,7 +392,7 @@
             label17.Name = "label17";
             label17.Size = new Size(54, 30);
             label17.TabIndex = 11;
-            label17.Text = "0/11";
+            label17.Text = "...";
             // 
             // label16
             // 
@@ -401,7 +401,7 @@
             label16.Name = "label16";
             label16.Size = new Size(50, 17);
             label16.TabIndex = 10;
-            label16.Text = "Низкий";
+            label16.Text = "Загрузка...";
             // 
             // label15
             // 
