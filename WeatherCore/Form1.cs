@@ -436,6 +436,11 @@ namespace WeatherCore
                 }
             }
         }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
     public class ChartDataPoint
     {
@@ -1026,3 +1031,4 @@ namespace WeatherCore
         }
     }
 }
+
