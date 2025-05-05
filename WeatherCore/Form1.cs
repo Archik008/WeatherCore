@@ -195,7 +195,7 @@ namespace WeatherCore
                     DateTime time = DateTime.Parse(hour.Time);
                     string str_time = $"{time:HH}:00";
                     string degrees = $"{Convert.ToInt32(hour.TempC)}°C";
-                    UserControl2 my_panel = new UserControl2(str_time, degrees);
+                    UserControl2 my_panel = new UserControl2(str_time, degrees, "Умеренный снег");
                     my_panel.font = new Font(family, 15);
                     flowLayoutPanel1.Controls.Add(my_panel);
                 }
