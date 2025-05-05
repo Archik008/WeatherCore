@@ -107,7 +107,7 @@
             // 
             label3.AutoSize = true;
             label3.ForeColor = SystemColors.ControlLightLight;
-            label3.Location = new Point(256, 42);
+            label3.Location = new Point(294, 42);
             label3.Name = "label3";
             label3.Size = new Size(78, 20);
             label3.TabIndex = 6;
@@ -139,7 +139,7 @@
             button2.Name = "button2";
             button2.Size = new Size(160, 38);
             button2.TabIndex = 3;
-            button2.Text = "Предудыщие дни";
+            button2.Text = "Другие дни";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -199,18 +199,18 @@
             label14.Font = new Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label14.Location = new Point(264, 86);
             label14.Name = "label14";
-            label14.Size = new Size(148, 81);
+            label14.Size = new Size(74, 81);
             label14.TabIndex = 2;
-            label14.Text = "39%";
+            label14.Text = "...";
             // 
             // label13
             // 
             label13.AutoSize = true;
             label13.Location = new Point(34, 49);
             label13.Name = "label13";
-            label13.Size = new Size(98, 20);
+            label13.Size = new Size(78, 20);
             label13.TabIndex = 1;
-            label13.Text = "Нормальная";
+            label13.Text = "Загрузка...";
             // 
             // label12
             // 
@@ -260,9 +260,9 @@
             label10.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label10.Location = new Point(239, 78);
             label10.Name = "label10";
-            label10.Size = new Size(47, 31);
+            label10.Size = new Size(29, 31);
             label10.TabIndex = 3;
-            label10.Text = "21°";
+            label10.Text = "...";
             // 
             // label9
             // 
@@ -302,9 +302,9 @@
             label19.AutoSize = true;
             label19.Location = new Point(127, 87);
             label19.Name = "label19";
-            label19.Size = new Size(102, 20);
+            label19.Size = new Size(78, 20);
             label19.TabIndex = 2;
-            label19.Text = "Выше нормы";
+            label19.Text = "Загрузка...";
             // 
             // panel3
             // 
@@ -345,9 +345,9 @@
             label7.ForeColor = SystemColors.ControlLightLight;
             label7.Location = new Point(222, 95);
             label7.Name = "label7";
-            label7.Size = new Size(84, 38);
+            label7.Size = new Size(35, 38);
             label7.TabIndex = 2;
-            label7.Text = "1 м/с";
+            label7.Text = "...";
             // 
             // label6
             // 
@@ -389,18 +389,18 @@
             label17.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label17.Location = new Point(328, 93);
             label17.Name = "label17";
-            label17.Size = new Size(59, 31);
+            label17.Size = new Size(29, 31);
             label17.TabIndex = 11;
-            label17.Text = "0/11";
+            label17.Text = "...";
             // 
             // label16
             // 
             label16.AutoSize = true;
             label16.Location = new Point(408, 60);
             label16.Name = "label16";
-            label16.Size = new Size(61, 20);
+            label16.Size = new Size(78, 20);
             label16.TabIndex = 10;
-            label16.Text = "Низкий";
+            label16.Text = "Загрузка...";
             // 
             // label15
             // 
