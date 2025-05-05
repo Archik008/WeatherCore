@@ -109,9 +109,9 @@
             label3.ForeColor = SystemColors.ControlLightLight;
             label3.Location = new Point(256, 42);
             label3.Name = "label3";
-            label3.Size = new Size(137, 20);
+            label3.Size = new Size(78, 20);
             label3.TabIndex = 6;
-            label3.Text = "Качество воздуха: ";
+            label3.Text = "Загрузка...";
             // 
             // min_max_degs
             // 
@@ -119,9 +119,9 @@
             min_max_degs.ForeColor = SystemColors.ControlLightLight;
             min_max_degs.Location = new Point(294, 22);
             min_max_degs.Name = "min_max_degs";
-            min_max_degs.Size = new Size(87, 20);
+            min_max_degs.Size = new Size(78, 20);
             min_max_degs.TabIndex = 5;
-            min_max_degs.Text = "min/max ℃";
+            min_max_degs.Text = "Загрузка...";
             // 
             // cloud_desc
             // 
@@ -129,9 +129,9 @@
             cloud_desc.ForeColor = SystemColors.ControlLightLight;
             cloud_desc.Location = new Point(294, 0);
             cloud_desc.Name = "cloud_desc";
-            cloud_desc.Size = new Size(82, 20);
+            cloud_desc.Size = new Size(78, 20);
             cloud_desc.TabIndex = 4;
-            cloud_desc.Text = "cloud_desc";
+            cloud_desc.Text = "Загрузка...";
             // 
             // button2
             // 

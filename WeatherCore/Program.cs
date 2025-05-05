@@ -15,14 +15,12 @@ internal static class Program
     }
 
     static IHostBuilder CreateHostBuilder() =>
-        Host.CreateDefaultBuilder()
-            .ConfigureServices((_, services) =>
-            {
-                services.AddDbContext<AppDbContext>();
-                services.AddScoped<ICityRepository, CityRepository>();
-                services.AddScoped<IDayWeatherRepository, DayWeatherRepository>();
-                services.AddScoped<IHourWeatherRepository, HourWeatherRepository>();
-                services.AddScoped<IWeatherService, WeatherService>();
-                services.AddScoped<Form1>(); // зарегистрируй форму тоже
-            });
+    Host.CreateDefaultBuilder()
+        .ConfigureServices((_, services) =>
+        {
+            services.AddDbContextFactory<AppDbContext>();
+            services.AddScoped<WeatherService>();
+            services.AddScoped<Form1>();
+            services.AddScoped<WeatherAPIManager>();
+        });
 }

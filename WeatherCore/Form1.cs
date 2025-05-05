@@ -20,6 +20,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using SkiaSharp;
 using OpenTK.Graphics.OpenGL;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace WeatherCore
 {
@@ -32,29 +33,27 @@ namespace WeatherCore
         private const int paddingRight = 10;
         private const int paddingBottom = 40; // Отступ снизу для меток
 
-        private readonly IWeatherService _weatherService;
-        private readonly AppDbContext _appDbContext;
+        private const string filePath = "weather.json";
 
-        public Form1(IWeatherService weatherService, AppDbContext context)
+        private readonly WeatherService _weatherService;
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
+
+        public Form1(IDbContextFactory<AppDbContext> contextFactory, WeatherService weatherService)
         {
             InitializeComponent();
+            _contextFactory = contextFactory;
             _weatherService = weatherService;
-            _appDbContext = context;
         }
 
         private static Color background_color = ColorTranslator.FromHtml("#4A90E2");
         private static Color section_color = ColorTranslator.FromHtml("#093860");
         private static Color panel_color = ColorTranslator.FromHtml("#00457E");
         private string selected_city;
-        private static Dictionary<string, string> cities = new()
-        {
-            {"Алматы", "Almaty"},
-            {"Астана", "Astana"},
-        };
+        private static List<string> weather_cities = new List<string>() { "Алматы", "Астана" };
 
         private DateTime selected_date;
 
-        private static string location_city = cities.TryGetValue("Алматы", out var en) ? en : "Алматы";
+        private static string location_city = "Алматы";
 
         // Пробовал в int возвести, все равно в графике десятичные числа у дней получаются;(
         private double[] days = Enumerable.Range(1, 7).Select(i => (double)i).ToArray();
@@ -129,15 +128,18 @@ namespace WeatherCore
 
         private async Task<WeatherRoot> ReturnWeatherObject()
         {
-            var manager = new WeatherAPIManager(_weatherService, _appDbContext);
+            var manager = new WeatherAPIManager(_contextFactory, _weatherService);
             var get_city = await _weatherService.AddOrGetCityAsync(location_city);
-            var old_weather = await manager.GetWeatherByCityIdAndDateRangeOrFetchAsync(get_city.Id, DateTime.Now.Date);
-            if (old_weather != null)
+            var weather = await manager.RunAsync(location_city);
+            if (get_city == null)
             {
+                return weather;
+            }
+            else
+            {
+                var old_weather = await manager.GetWeatherByCityIdAndDateRangeOrFetchAsync(get_city.Id, DateTime.Now.Date);
                 return old_weather;
             }
-            var weather = await manager.RunAsync(location_city);
-            return weather;
         }
 
         private void SetUV(ForecastDay day)
@@ -197,12 +199,14 @@ namespace WeatherCore
             if (today?.Hour != null)
             {
                 flowLayoutPanel1.Controls.Clear();
+                var translator = new ConditionTranslator();
+                await translator.LoadConditionsAsync("codes.json");
                 foreach (var hour in today.Hour)
                 {
                     DateTime time = DateTime.Parse(hour.Time);
                     string str_time = $"{time:HH}:00";
                     string degrees = $"{Convert.ToInt32(hour.TempC)}°C";
-                    UserControl2 my_panel = new UserControl2(str_time, degrees);
+                    UserControl2 my_panel = new UserControl2(str_time, degrees, translator.GetRussianConditionText(hour.Condition.Text));
                     my_panel.font = new Font(family, 15);
                     flowLayoutPanel1.Controls.Add(my_panel);
                 }
@@ -456,44 +460,42 @@ namespace WeatherCore
         private const string filePath = "weather.json";
         private static readonly HttpClient httpClient = new HttpClient();
         private readonly AppDbContext _context;
+        private WeatherService _weatherService;
 
-        private IWeatherService weatherService;
-
-        public WeatherAPIManager(IWeatherService weatherService, AppDbContext context)
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
+        public WeatherAPIManager(IDbContextFactory<AppDbContext> contextFactory, WeatherService weatherService)
         {
-            weatherService = weatherService;
-            _context = context;
+            _contextFactory = contextFactory;
+            _weatherService = weatherService;
         }
+
 
         public async Task<WeatherRoot> RunAsync(string city)
         {
             var weather_data = await ReadWeatherFromFileAsync(filePath);
             var cur_loc_city = weather_data.Location.Name;
 
-            if ((!File.Exists(filePath) || File.GetLastWriteTimeUtc(filePath).Date < DateTime.UtcNow.Date) && cur_loc_city != city)
+            if ((!File.Exists(filePath) || File.GetLastWriteTimeUtc(filePath).Date < DateTime.UtcNow.Date) || cur_loc_city != city)
             {
                 Debug.WriteLine("Файл не найден, устарел или запрошен новый город. Загружаю новый...");
-                await FetchAndSaveWeatherAsync(city);
+                //await FetchAndSaveWeatherAsync(cur_loc_city);
                 weather_data = await ReadWeatherFromFileAsync(filePath);
             }
             else
             {
                 Debug.WriteLine("Файл актуален. Использую локальные данные.");
+                return weather_data;
             }
 
             var translator = new ConditionTranslator();
+            await translator.LoadConditionsAsync("codes.json");
 
             //Debug.WriteLine($"Влажность: {weather_data.Current.Humidity}%");
             //Debug.WriteLine($"Ветер: {weather_data.Current.WindKph / 3.6:F1} м/с");
             //Debug.WriteLine($"UV индекс: {weather_data.Current.Uv}");
             //Debug.WriteLine($"Качество воздуха (AQI): {weather_data.Current.AirQuality.UsEpaIndex}");
 
-            var get_city = await weatherService.AddOrGetCityAsync(cur_loc_city);
-
-            if (get_city != null)
-            {
-                return weather_data;
-            }
+            var get_city = await _weatherService.AddOrGetCityAsync(cur_loc_city);
 
             Debug.WriteLine("\n📆 Прогноз на 7 дней:");
             foreach (var day in weather_data.Forecast.ForecastDay)
@@ -502,22 +504,27 @@ namespace WeatherCore
 
                 double[] min_max_uv_day = getUvMinMax(day);
 
-                Debug.WriteLine($"\n📅 {day.Date}: {day.Day.MaxtempC}°C / {day.Day.MintempC}°C, AQI: {day.Day.AirQuality?.UsEpaIndex}, UV: {day.Day.Uv}, Влажность: {day.Day.Avghumidity}%");
+                //Debug.WriteLine($"\n📅 {day.Date}: {day.Day.MaxtempC}°C / {day.Day.MintempC}°C, AQI: {day.Day.AirQuality?.UsEpaIndex}, UV: {day.Day.Uv}, Влажность: {day.Day.Avghumidity}%");
 
-                Debug.WriteLine($"🕒 Почасовой прогноз:");
+                //Debug.WriteLine($"🕒 Почасовой прогноз:");
 
                 double average_winds = day.Hour.Select(h => h.WindKph / 3.6).Average();
                 double[] uvs = day.Hour.Select(h => h.Uv).ToArray();
                 double min_v = uvs.Min();
                 double max_v = uvs.Max();
 
-                var day_db = await weatherService.AddDayWeatherAsync(get_city.Name, new DayWeather { Day = DateTime.Parse(day_date), Humility = day.Day.Avghumidity, Wind = average_winds, Uv_min = min_v, Uv_max = max_v, Aqi = day.Day.AirQuality.UsEpaIndex, Temp_min = day.Day.MintempC, Temp_max = day.Day.MaxtempC, CityId = get_city.Id});
+                var day_db = await _weatherService.AddDayWeatherAsync(get_city.Name, new DayWeather { Day = DateTime.Parse(day_date), Humility = day.Day.Avghumidity, Wind = average_winds, Uv_min = min_v, Uv_max = max_v, Aqi = day.Day.AirQuality.UsEpaIndex, Temp_min = day.Day.MintempC, Temp_max = day.Day.MaxtempC, CityId = get_city.Id});
 
                 foreach (var hour in day.Hour)
                 {
                     double windMs = hour.WindKph / 3.6;
-                    Debug.WriteLine($"{hour.Time} | 🌡️ {hour.TempC}°C | 💧 {hour.Humidity}% | 🌬️ {windMs:F1} м/с | 🔆 UV: {hour.Uv} | ☁️ {hour.Condition?.Text}");
-                    await weatherService.AddHourWeatherAsync(day_db.Id, new HourWeather { cur_temp = hour.TempC, condition = translator.GetRussianConditionText(hour.Condition.Text), DayId = day_db.Id, hour = DateTime.Parse(hour.Time)});
+                    string translated_text = translator.GetRussianConditionText(hour.Condition?.Text);
+                    if (translated_text == null)
+                    {
+                        continue;
+                    }
+                    //Debug.WriteLine($"{hour.Time} | 🌡️ {hour.TempC}°C | 💧 {hour.Humidity}% | 🌬️ {windMs:F1} м/с | 🔆 UV: {hour.Uv} | ☁️ {hour.Condition?.Text}");
+                    await _weatherService.AddHourWeatherAsync(day_db.Id, new HourWeather { cur_temp = hour.TempC, condition = translated_text, DayId = day_db.Id, hour = DateTime.Parse(hour.Time)});
                 }
             }
             return weather_data;
@@ -525,11 +532,13 @@ namespace WeatherCore
 
         public async Task<WeatherRoot> GetWeatherByCityIdAndDateRangeOrFetchAsync(int cityId, DateTime startDate)
         {
-            var city = await _context.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
+            using var context = _contextFactory.CreateDbContext();
+
+            var city = await context.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
             if (city == null)
                 return null;
 
-            var forecastDays = await _context.Days
+            var forecastDays = await context.Days
                 .Include(d => d.hourlyWeathers)
                 .Where(d => d.CityId == cityId && d.Day >= startDate.Date && d.Day < startDate.Date.AddDays(7))
                 .OrderBy(d => d.Day)
@@ -537,7 +546,6 @@ namespace WeatherCore
 
             if (forecastDays.Count < 7)
             {
-                // Недостаточно данных — загружаем и добавляем
                 var weatherRoot = await RunAsync(city.Name);
                 return weatherRoot;
             }
@@ -769,15 +777,24 @@ namespace WeatherCore
     public class ConditionTranslator
     {
         private List<WeatherCondition> _conditions;
-
+        
         public async Task LoadConditionsAsync(string filePath)
         {
             string json = await File.ReadAllTextAsync(filePath);
             _conditions = JsonSerializer.Deserialize<List<WeatherCondition>>(json);
+            foreach (var item in _conditions)
+            {
+                var ru_lang = item.languages.FirstOrDefault(l => l.lang_iso == "ru");
+                Debug.WriteLine($"Условие день: {ru_lang.day_text}, условие ночь: {ru_lang.night_text}");
+            }
         }
 
-        public string GetRussianConditionText(string condition_text, bool is_night = false)
+        public string GetRussianConditionText(string condition_text = null, bool is_night = false)
         {
+            if (condition_text == null)
+            {
+                return null;
+            }
             foreach (var item in _conditions)
             {
                 var ru_lang = item.languages.FirstOrDefault(l => l.lang_iso == "ru");
@@ -855,150 +872,28 @@ namespace WeatherCore
         public DayWeather Day { get; set; }
     }
 
-    public interface ICityRepository
+
+    public class WeatherService
     {
-        Task<List<City>> GetAllAsync();
-        Task<City?> GetByIdAsync(int id);
-        Task AddAsync(City city);
-    }
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
 
-    public interface IDayWeatherRepository
-    {
-        Task<List<DayWeather>> GetAllByCityIdAsync(int cityId);
-        Task<DayWeather?> GetByIdAsync(int id);
-        Task AddAsync(DayWeather weather);
-    }
-
-    public interface IHourWeatherRepository
-    {
-        Task<List<HourWeather>> GetAllByDayIdAsync(int dayId);
-        Task<HourWeather?> GetByIdAsync(int id);
-        Task AddAsync(HourWeather hourWeather);
-    }
-
-
-    public class CityRepository : ICityRepository
-    {
-        private readonly AppDbContext _context;
-
-        public CityRepository(AppDbContext context)
+        public WeatherService(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _context = context;
-        }
-
-        public async Task<List<City>> GetAllAsync()
-        {
-            return await _context.Cities
-                .Include(c => c.Weather)
-                .ToListAsync();
-        }
-
-        public async Task<City?> GetByIdAsync(int id)
-        {
-            return await _context.Cities
-                .Include(c => c.Weather)
-                .FirstOrDefaultAsync(c => c.Id == id);
-        }
-
-        public async Task AddAsync(City city)
-        {
-            _context.Cities.Add(city);
-            await _context.SaveChangesAsync();
-        }
-    }
-
-    public class DayWeatherRepository : IDayWeatherRepository
-    {
-        private readonly AppDbContext _context;
-
-        public DayWeatherRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<List<DayWeather>> GetAllByCityIdAsync(int cityId)
-        {
-            return await _context.Days
-                .Where(w => w.CityId == cityId)
-                .ToListAsync();
-        }
-
-        public async Task<DayWeather?> GetByIdAsync(int id)
-        {
-            return await _context.Days
-                .Include(w => w.City)
-                .FirstOrDefaultAsync(w => w.Id == id);
-        }
-
-        public async Task AddAsync(DayWeather weather)
-        {
-            _context.Days.Add(weather);
-            await _context.SaveChangesAsync();
-        }
-    }
-
-    public class HourWeatherRepository : IHourWeatherRepository
-    {
-        private readonly AppDbContext _context;
-
-        public HourWeatherRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<List<HourWeather>> GetAllByDayIdAsync(int dayId)
-        {
-            return await _context.Hours
-                .Where(h => h.DayId == dayId)
-                .ToListAsync();
-        }
-
-        public async Task<HourWeather?> GetByIdAsync(int id)
-        {
-            return await _context.Hours
-                .Include(h => h.Day)
-                .FirstOrDefaultAsync(h => h.Id == id);
-        }
-
-        public async Task AddAsync(HourWeather hourWeather)
-        {
-            _context.Hours.Add(hourWeather);
-            await _context.SaveChangesAsync();
-        }
-    }
-
-
-    public interface IWeatherService
-    {
-        Task<City> AddOrGetCityAsync(string cityName);
-        Task<DayWeather> AddDayWeatherAsync(string cityName, DayWeather dayWeather);
-        Task<List<DayWeather>> GetForecastByCityAsync(string cityName);
-        Task AddHourWeatherAsync(int dayId, HourWeather hourWeather);
-        Task<List<HourWeather>> GetHourlyForecastAsync(int dayId);
-    }
-
-
-    public class WeatherService : IWeatherService
-    {
-        private readonly ICityRepository _cityRepo;
-        private readonly IDayWeatherRepository _weatherRepo;
-        private readonly IHourWeatherRepository _hourRepo;
-
-        public WeatherService(ICityRepository cityRepo, IDayWeatherRepository weatherRepo)
-        {
-            _cityRepo = cityRepo;
-            _weatherRepo = weatherRepo;
+            _contextFactory = contextFactory;
         }
 
         public async Task<City> AddOrGetCityAsync(string cityName)
         {
-            var cities = await _cityRepo.GetAllAsync();
-            var city = cities.FirstOrDefault(c => c.Name.ToLower() == cityName.ToLower());
+            using var context = _contextFactory.CreateDbContext();
+
+            var city = await context.Cities
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == cityName.ToLower());
 
             if (city == null)
             {
                 city = new City { Name = cityName };
-                await _cityRepo.AddAsync(city);
+                context.Cities.Add(city);
+                await context.SaveChangesAsync();
             }
 
             return city;
@@ -1006,33 +901,49 @@ namespace WeatherCore
 
         public async Task<DayWeather> AddDayWeatherAsync(string cityName, DayWeather dayWeather)
         {
-            var city = await AddOrGetCityAsync(cityName);
+            using var context = _contextFactory.CreateDbContext();
+
+            var city = await AddOrGetCityAsync(cityName); // город создаётся в отдельном using
             dayWeather.CityId = city.Id;
 
-            await _weatherRepo.AddAsync(dayWeather);
+            context.Days.Add(dayWeather);
+            await context.SaveChangesAsync();
             return dayWeather;
         }
 
-        public async Task AddHourWeatherAsync(int dayId, HourWeather hourWeather)
+        public async Task<HourWeather> AddHourWeatherAsync(int dayId, HourWeather hourWeather)
         {
+            using var context = _contextFactory.CreateDbContext();
+
             hourWeather.DayId = dayId;
-            await _hourRepo.AddAsync(hourWeather);
+            context.Hours.Add(hourWeather);
+            await context.SaveChangesAsync();
+            return hourWeather;
         }
 
         public async Task<List<DayWeather>> GetForecastByCityAsync(string cityName)
         {
-            var cities = await _cityRepo.GetAllAsync();
-            var city = cities.FirstOrDefault(c => c.Name.ToLower() == cityName.ToLower());
+            using var context = _contextFactory.CreateDbContext();
+
+            var city = await context.Cities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == cityName.ToLower());
 
             if (city == null)
                 return new List<DayWeather>();
 
-            return await _weatherRepo.GetAllByCityIdAsync(city.Id);
+            return await context.Days
+                .Where(dw => dw.CityId == city.Id)
+                .ToListAsync();
         }
 
         public async Task<List<HourWeather>> GetHourlyForecastAsync(int dayId)
         {
-            return await _hourRepo.GetAllByDayIdAsync(dayId);
+            using var context = _contextFactory.CreateDbContext();
+
+            return await context.Hours
+                .Where(hw => hw.DayId == dayId)
+                .ToListAsync();
         }
     }
 }

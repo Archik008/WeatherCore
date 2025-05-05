@@ -14,12 +14,16 @@ namespace WeatherCore
     {
         private string hours;
         private string degrees;
+
+        // Вот полученное условие
+        private string Condition;
         public Font font { get; set; }
-        public UserControl2(string hours, string degrees)
+        public UserControl2(string hours, string degrees, string condition)
         {
             InitializeComponent();
             this.hours = hours;
             this.degrees = degrees;
+            this.Condition = condition;
         }
         private void UserControl2_Load(object sender, EventArgs e)
         {
@@ -31,6 +35,8 @@ namespace WeatherCore
             label1.Text = hours;
             label3.Font = font;
             label3.Text = degrees;
+
+            // Тут задаешь у picturebox картинку в зависимости от условия
         }
 
         private void label1_Click(object sender, EventArgs e)
