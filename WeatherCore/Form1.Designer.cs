@@ -107,11 +107,7 @@
             // 
             label3.AutoSize = true;
             label3.ForeColor = SystemColors.ControlLightLight;
-<<<<<<< HEAD
-            label3.Location = new Point(294, 42);
-=======
             label3.Location = new Point(224, 36);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label3.Name = "label3";
             label3.Size = new Size(78, 20);
             label3.TabIndex = 6;
@@ -204,11 +200,7 @@
             label14.Font = new Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label14.Location = new Point(231, 73);
             label14.Name = "label14";
-<<<<<<< HEAD
-            label14.Size = new Size(74, 81);
-=======
             label14.Size = new Size(131, 71);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label14.TabIndex = 2;
             label14.Text = "...";
             // 
@@ -217,11 +209,7 @@
             label13.AutoSize = true;
             label13.Location = new Point(30, 42);
             label13.Name = "label13";
-<<<<<<< HEAD
-            label13.Size = new Size(78, 20);
-=======
             label13.Size = new Size(84, 17);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label13.TabIndex = 1;
             label13.Text = "Загрузка...";
             // 
@@ -273,11 +261,7 @@
             label10.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label10.Location = new Point(209, 66);
             label10.Name = "label10";
-<<<<<<< HEAD
-            label10.Size = new Size(29, 31);
-=======
             label10.Size = new Size(43, 30);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label10.TabIndex = 3;
             label10.Text = "...";
             // 
@@ -319,11 +303,7 @@
             label19.AutoSize = true;
             label19.Location = new Point(111, 74);
             label19.Name = "label19";
-<<<<<<< HEAD
-            label19.Size = new Size(78, 20);
-=======
             label19.Size = new Size(87, 17);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label19.TabIndex = 2;
             label19.Text = "Загрузка...";
             // 
@@ -366,11 +346,7 @@
             label7.ForeColor = SystemColors.ControlLightLight;
             label7.Location = new Point(194, 81);
             label7.Name = "label7";
-<<<<<<< HEAD
-            label7.Size = new Size(35, 38);
-=======
             label7.Size = new Size(71, 32);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label7.TabIndex = 2;
             label7.Text = "...";
             // 
@@ -414,11 +390,7 @@
             label17.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label17.Location = new Point(287, 79);
             label17.Name = "label17";
-<<<<<<< HEAD
-            label17.Size = new Size(29, 31);
-=======
             label17.Size = new Size(54, 30);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label17.TabIndex = 11;
             label17.Text = "...";
             // 
@@ -427,11 +399,7 @@
             label16.AutoSize = true;
             label16.Location = new Point(357, 51);
             label16.Name = "label16";
-<<<<<<< HEAD
-            label16.Size = new Size(78, 20);
-=======
             label16.Size = new Size(50, 17);
->>>>>>> ba03ccafb57f6556844fe106316ec34dee00a5f1
             label16.TabIndex = 10;
             label16.Text = "Загрузка...";
             // 
