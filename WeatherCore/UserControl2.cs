@@ -18,12 +18,14 @@ namespace WeatherCore
         // Вот полученное условие
         private string Condition;
         public Font font { get; set; }
+        public Control label_time;
         public UserControl2(string hours, string degrees, string condition)
         {
             InitializeComponent();
             this.hours = hours;
             this.degrees = degrees;
             this.Condition = condition;
+            label_time = label1;
         }
         private void UserControl2_Load(object sender, EventArgs e)
         {
