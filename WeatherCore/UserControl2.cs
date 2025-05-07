@@ -14,9 +14,10 @@ namespace WeatherCore
     {
         private string hours;
         private string degrees;
-        private string Condition; // Добавил условие погоды для загрузки картинки
-        public Font font { get; set; }
 
+        // Вот полученное условие
+        private string Condition;
+        public Font font { get; set; }
         public UserControl2(string hours, string degrees, string condition)
         {
             InitializeComponent();
