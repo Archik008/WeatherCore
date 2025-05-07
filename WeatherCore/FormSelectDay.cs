@@ -14,8 +14,11 @@ namespace WeatherCore
     public partial class FormSelectDay : Form
     {
         public DateTime SelectedDate { get; private set; }
-        public FormSelectDay()
+        private DateTime _start_date, _end_date;
+        public FormSelectDay(DateTime start_date, DateTime end_date)
         {
+            _start_date = start_date;
+            _end_date = end_date;
             InitializeComponent();
         }
 
@@ -26,6 +29,11 @@ namespace WeatherCore
             FontFamily font_family = fontCollection.Families[0];
             Font font = new Font(font_family, 17);
             Font = font;
+
+            DateTime today = _start_date;
+            DateTime endOfWeek = _end_date;
+            dateTimePicker1.MinDate = today;
+            dateTimePicker1.MaxDate = endOfWeek;
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
