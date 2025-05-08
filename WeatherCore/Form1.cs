@@ -215,7 +215,9 @@ namespace WeatherCore
                     string str_time = $"{time:HH}:00";
                     string degrees = $"{Convert.ToInt32(hour.TempC)}°C";
 
-                    var my_panel = new UserControl2(str_time, degrees, translator.GetRussianConditionText(hour.Condition.Text));
+                    Debug.WriteLine($"Условия: {hour.Condition.Text}");
+
+                    var my_panel = new UserControl2(str_time, degrees, hour.Condition.Text);
                     my_panel.font = new Font(family, 15);
                     flowLayoutPanel1.Controls.Add(my_panel);
                 }
@@ -246,13 +248,7 @@ namespace WeatherCore
 
             var cur_day = await ReturnCurDayData();
             var cur_day_obj = cur_day.Hour.FirstOrDefault();
-            string original = cur_day_obj.Condition.Text.Trim();
-            string translated = translator.GetRussianConditionText(original, isNight);
-
-            if (translated == null)
-            {
-                translated = original;
-            }
+            string translated = cur_day_obj.Condition.Text.Trim();
 
             cloud_desc.Text = TruncateText(translated, 30);
             ToolTip tooltip = new ToolTip();
