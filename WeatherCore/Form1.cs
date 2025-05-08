@@ -155,8 +155,8 @@ namespace WeatherCore
 
         private async Task SetUV()
         {
-            var weather_obj = await ReturnWeatherObject();
-            double[] uvs = weather_obj.Forecast.ForecastDay.FirstOrDefault().Hour.Select(obj => obj.Uv).ToArray();
+            var weather_obj = await ReturnCurDayData();
+            double[] uvs = weather_obj.Hour.Select(obj => obj.Uv).ToArray();
             double min = uvs.Min();
             double max = uvs.Max();
 
@@ -215,8 +215,6 @@ namespace WeatherCore
                     string str_time = $"{time:HH}:00";
                     string degrees = $"{Convert.ToInt32(hour.TempC)}°C";
 
-                    Debug.WriteLine($"Условия: {hour.Condition.Text}");
-
                     var my_panel = new UserControl2(str_time, degrees, hour.Condition.Text);
                     my_panel.font = new Font(family, 15);
                     flowLayoutPanel1.Controls.Add(my_panel);
@@ -241,18 +239,15 @@ namespace WeatherCore
 
         private async Task LoadDescription()
         {
-            var translator = new ConditionTranslator();
-            await translator.LoadConditionsAsync("codes.json");
-
             bool isNight = DateTime.Now.Hour < 6 || DateTime.Now.Hour > 20;
 
             var cur_day = await ReturnCurDayData();
-            var cur_day_obj = cur_day.Hour.FirstOrDefault();
-            string translated = cur_day_obj.Condition.Text.Trim();
+            var cur_day_obj = cur_day.Hour.FirstOrDefault(h =>  DateTime.Parse(h.Time).Hour == selected_date.Hour);
+            string condition = cur_day_obj.Condition.Text.Trim();
 
-            cloud_desc.Text = TruncateText(translated, 30);
+            cloud_desc.Text = TruncateText(condition, 30);
             ToolTip tooltip = new ToolTip();
-            tooltip.SetToolTip(cloud_desc, translated);
+            tooltip.SetToolTip(cloud_desc, condition);
 
             min_max_degs.Text = $"{cur_day.Day.MintempC}/{cur_day.Day.MaxtempC}°C";
 
@@ -508,14 +503,12 @@ namespace WeatherCore
             }
             if (weather_obj != null)
             {
-                Debug.WriteLine("Использование из базы данных успешно");
                 return weather_obj;
             }
 
             if (weather_obj == null || File.GetLastWriteTimeUtc(filePath).Date < DateTime.UtcNow.Date || cur_loc_city != city)
             {
                 await FetchAndSaveWeatherAsync(city);
-                Debug.WriteLine("Файл не найден, устарел или запрошен новый город. Загружаю новый...");
                 weather_data = await ReadWeatherFromFileAsync(filePath);
                 return await WriteWeatherData(weather_data, city);
             }
@@ -647,7 +640,6 @@ namespace WeatherCore
                 response.EnsureSuccessStatusCode();
                 var json = await response.Content.ReadAsStringAsync();
                 await File.WriteAllTextAsync(filePath, json);
-                Debug.WriteLine("Данные успешно загружены и сохранены.");
             }
             catch 
             {
@@ -666,7 +658,6 @@ namespace WeatherCore
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при чтении файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Debug.WriteLine(ex.Message);
                 return null;
             }
         }
