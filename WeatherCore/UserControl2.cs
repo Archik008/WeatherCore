@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,6 @@ namespace WeatherCore
             label3.Text = degrees;
 
             string filename = "Ожидается гроза.png"; // значение по умолчанию
-
             // Установка названия файла в зависимости от условия
             switch (Condition)
             {
@@ -109,18 +109,8 @@ namespace WeatherCore
                     filename = "Гроза.png";
                     break;
             }
-
-            // Путь до файла, можно заменить на абсолютный путь если нужно
-            string path = System.IO.Path.Combine(Application.StartupPath, "icons", filename);
-            try
-            {
-                pictureBox1.Image = Image.FromFile(path);
-            }
-            catch
-            {
-                // fallback если файл не найден
-                pictureBox1.Image = null;
-            }
+            pictureBox1.Image = Image.FromFile(filename);
+            Debug.Write(filename); 
         }
 
         private void label1_Click(object sender, EventArgs e)

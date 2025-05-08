@@ -81,8 +81,7 @@
             pictureBox1.InitialImage = null;
             pictureBox1.Location = new Point(10, 29);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(38, 36);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.Size = new Size(51, 42);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
