@@ -833,7 +833,7 @@ namespace WeatherCore
         public DbSet<HourWeather> Hours { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseMySql("server=localhost;database=weathercore_db;user=root;password=277353",
+            options.UseMySql("server=localhost;database=weathercore_db;user=root;password=12345",
                 new MySqlServerVersion(new Version(8, 0, 34)));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
