@@ -49,16 +49,16 @@
             panel2.Location = new Point(0, 0);
             panel2.Margin = new Padding(0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(76, 115);
+            panel2.Size = new Size(66, 98);
             panel2.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(8, 8);
+            label1.Location = new Point(7, 7);
             label1.Name = "label1";
-            label1.Size = new Size(44, 20);
+            label1.Size = new Size(39, 17);
             label1.TabIndex = 2;
             label1.Text = "17:00";
             label1.Click += label1_Click;
@@ -67,10 +67,10 @@
             // 
             label3.AutoSize = true;
             label3.ForeColor = SystemColors.ControlLightLight;
-            label3.Location = new Point(12, 79);
+            label3.Location = new Point(10, 67);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.No;
-            label3.Size = new Size(40, 20);
+            label3.Size = new Size(35, 17);
             label3.TabIndex = 1;
             label3.Text = "17℃";
             // 
@@ -79,11 +79,12 @@
             pictureBox1.Anchor = AnchorStyles.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.InitialImage = null;
-            pictureBox1.Location = new Point(12, 34);
+            pictureBox1.Location = new Point(10, 29);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(51, 42);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // toolTip1
             // 
@@ -92,11 +93,11 @@
             // 
             // UserControl2
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel2);
             Name = "UserControl2";
-            Size = new Size(81, 115);
+            Size = new Size(71, 98);
             Load += UserControl2_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();

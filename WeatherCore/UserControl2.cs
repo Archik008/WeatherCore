@@ -42,7 +42,6 @@ namespace WeatherCore
             label3.Text = degrees;
 
             string filename = "Ожидается гроза.png"; // значение по умолчанию
-            Debug.WriteLine($"Условия погоды: {Condition}");
             // Установка названия файла в зависимости от условия
             switch (Condition)
             {
