@@ -803,22 +803,6 @@ namespace WeatherCore
             string json = await File.ReadAllTextAsync(filePath);
             _conditions = JsonSerializer.Deserialize<List<WeatherCondition>>(json);
         }
-
-        public void GetRussianConditionText(string condition_text)
-        {
-            
-            //foreach (var item in _conditions)
-            //{
-            //    var ru_lang = item.languages.FirstOrDefault(l => l.lang_iso == "ru");
-            //    if (ru_lang != null)
-            //    {
-                    
-            //    }
-            //}
-            //var condition = _conditions?.FirstOrDefault(c => c.code == code);
-            //var ru = condition?.languages?.FirstOrDefault(l => l.lang_iso == "ru");
-            // не работает переделывай
-            //??
         public string GetRussianConditionText(string condition_text = null, bool is_night = false)
         {
             if (condition_text == null)
@@ -849,7 +833,7 @@ namespace WeatherCore
         public DbSet<HourWeather> Hours { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseMySql("server=localhost;database=weathercore_db;user=root;password=12345",
+            options.UseMySql("server=localhost;database=weathercore_db;user=root;password=277353",
                 new MySqlServerVersion(new Version(8, 0, 34)));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

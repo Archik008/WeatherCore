@@ -79,9 +79,9 @@
             pictureBox1.Anchor = AnchorStyles.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.InitialImage = null;
-            pictureBox1.Location = new Point(10, 29);
+            pictureBox1.Location = new Point(0, 22);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(51, 42);
+            pictureBox1.Size = new Size(66, 49);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
