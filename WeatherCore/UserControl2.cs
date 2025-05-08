@@ -16,6 +16,8 @@ namespace WeatherCore
         private string hours;
         private string degrees;
 
+
+
         // Вот полученное условие
         private string Condition;
         public Font font { get; set; }
@@ -36,10 +38,21 @@ namespace WeatherCore
                 return;
             }
 
-            label1.Font = font;
             label1.Text = hours;
+            label1.Font = font;
+
             label3.Font = font;
             label3.Text = degrees;
+            
+            pictureBox1.Controls.Add(label3);
+
+            label3.Location = new Point(label3.Left - pictureBox1.Left, label3.Top - pictureBox1.Top);
+
+            label1.BackColor = Color.Transparent;
+            label3.BackColor = Color.Transparent;
+
+            label1.Location = new Point((this.ClientSize.Width - label1.Width) / 2, label1.Location.Y);
+
 
             string filename = "Ожидается гроза.png"; // значение по умолчанию
             // Установка названия файла в зависимости от условия
@@ -110,7 +123,7 @@ namespace WeatherCore
                     break;
             }
             pictureBox1.Image = Image.FromFile(filename);
-            Debug.Write(filename); 
+            Debug.Write(filename);
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -119,6 +132,11 @@ namespace WeatherCore
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }
