@@ -56,7 +56,7 @@
             // 
             label1.AutoSize = true;
             label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(7, 7);
+            label1.Location = new Point(6, 10);
             label1.Name = "label1";
             label1.Size = new Size(39, 17);
             label1.TabIndex = 2;
@@ -73,15 +73,16 @@
             label3.Size = new Size(35, 17);
             label3.TabIndex = 1;
             label3.Text = "17℃";
+            label3.Click += label3_Click;
             // 
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.InitialImage = null;
-            pictureBox1.Location = new Point(0, 22);
+            pictureBox1.Location = new Point(0, 30);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(66, 49);
+            pictureBox1.Size = new Size(66, 65);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
