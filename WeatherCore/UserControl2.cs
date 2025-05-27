@@ -45,17 +45,17 @@ namespace WeatherCore
             label1.Text = hours;
             label1.Font = font;
 
-            label3.Font = font;
-            label3.Text = degrees;
-            
-            pictureBox1.Controls.Add(label3);
+            label2.Font = font;
+            label2.Text = degrees;
 
-            label3.Location = new Point(label3.Left - pictureBox1.Left, label3.Top - pictureBox1.Top);
+            //label3.Location = new Point(label3.Left - pictureBox1.Left, label3.Top - pictureBox1.Top);
 
-            label1.BackColor = Color.Transparent;
-            label3.BackColor = Color.Transparent;
+            //label1.BackColor = Color.Transparent;/
+            //label3.BackColor = Color.Transparent;
 
-            label1.Location = new Point((this.ClientSize.Width - label1.Width) / 2, label1.Location.Y);
+            //Debug.WriteLine(label3.Location);
+
+            //label1.Location = new Point((this.ClientSize.Width - label1.Width) / 2, label1.Location.Y);
 
 
             string filename = "Ожидается гроза.png"; // значение по умолчанию

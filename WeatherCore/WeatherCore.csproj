@@ -91,6 +91,9 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+		<EmbeddedResource Update="UserControl2.resx">
+		  <Generator></Generator>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>
