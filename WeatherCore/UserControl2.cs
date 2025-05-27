@@ -22,13 +22,17 @@ namespace WeatherCore
         private string Condition;
         public Font font { get; set; }
         public Control label_time;
-        public UserControl2(string hours, string degrees, string condition)
+
+        private bool is_night;
+        public UserControl2(string hours, string degrees, string condition, bool is_night)
         {
             InitializeComponent();
             this.hours = hours;
             this.degrees = degrees;
-            this.Condition = condition;
+            Condition = condition;
             label_time = label1;
+            var hour = DateTime.Now.Hour;
+            this.is_night = is_night;
         }
 
         private void UserControl2_Load(object sender, EventArgs e)
@@ -59,10 +63,15 @@ namespace WeatherCore
             switch (Condition)
             {
                 case "Солнечно":
-                    filename = "Солнце.png";
-                    break;
                 case "Ясно":
-                    filename = "Полумесяц.png";
+                    if (is_night)
+                    {
+                        filename = "Полумесяц.png";
+                    }
+                    else
+                    {
+                        filename = "Солнце.png";
+                    }
                     break;
                 case "Переменная облачность":
                 case "Облачно":
@@ -122,8 +131,7 @@ namespace WeatherCore
                     filename = "Гроза.png";
                     break;
             }
-            pictureBox1.Image = Image.FromFile(filename);
-            Debug.Write(filename);
+            pictureBox1.Image = Image.FromFile(ResourcePathHelper.GetPath("Resources/" + filename));
         }
 
         private void label1_Click(object sender, EventArgs e)

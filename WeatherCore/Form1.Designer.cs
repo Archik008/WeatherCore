@@ -66,6 +66,8 @@
             label2 = new Label();
             comboBox1 = new ComboBox();
             contextMenuStrip1 = new ContextMenuStrip(components);
+            timer1 = new System.Windows.Forms.Timer(components);
+            notifyIcon1 = new NotifyIcon(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             tabControl1.SuspendLayout();
@@ -111,11 +113,11 @@
             // 
             label3.AutoSize = true;
             label3.ForeColor = SystemColors.ControlLightLight;
-            label3.Location = new Point(251, 42);
+            label3.Location = new Point(211, 40);
             label3.Name = "label3";
-            label3.Size = new Size(78, 20);
+            label3.Size = new Size(206, 20);
             label3.TabIndex = 6;
-            label3.Text = "Загрузка...";
+            label3.Text = "Качество воздуха: Загрузка...";
             // 
             // min_max_degs
             // 
@@ -144,7 +146,7 @@
             button2.Name = "button2";
             button2.Size = new Size(160, 38);
             button2.TabIndex = 3;
-            button2.Text = "Предыдущие дни";
+            button2.Text = "Другие дни";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -206,7 +208,7 @@
             // 
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label14.Location = new Point(264, 86);
+            label14.Location = new Point(239, 86);
             label14.Name = "label14";
             label14.Size = new Size(74, 81);
             label14.TabIndex = 2;
@@ -312,7 +314,7 @@
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(127, 87);
+            label19.Location = new Point(182, 81);
             label19.Name = "label19";
             label19.Size = new Size(78, 20);
             label19.TabIndex = 2;
@@ -479,6 +481,17 @@
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(61, 4);
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 120000;
+            timer1.Tick += timer1_Tick_1;
+            // 
+            // notifyIcon1
+            // 
+            notifyIcon1.Text = "notifyIcon1";
+            notifyIcon1.Visible = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -487,6 +500,7 @@
             ClientSize = new Size(800, 449);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "WeatherCore";
@@ -549,5 +563,7 @@
         private Label label3;
         private Label min_max_degs;
         private ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Timer timer1;
+        private NotifyIcon notifyIcon1;
     }
 }

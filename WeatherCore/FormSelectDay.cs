@@ -25,7 +25,7 @@ namespace WeatherCore
         private void FormSelectDay_Load(object sender, EventArgs e)
         {
             PrivateFontCollection fontCollection = new PrivateFontCollection();
-            fontCollection.AddFontFile("Pixeled.ttf"); // файл шрифта
+            fontCollection.AddFontFile(ResourcePathHelper.GetPath("Resources/Pixeled.ttf")); // файл шрифта
             FontFamily font_family = fontCollection.Families[0];
             Font font = new Font(font_family, 17);
             Font = font;
