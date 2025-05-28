@@ -36,6 +36,7 @@ namespace WeatherCore
             dateTimePicker1.MaxDate = endOfWeek;
         }
 
+        // Берем дату из datepicker 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             SelectedDate = dateTimePicker1.Value;

@@ -48,16 +48,6 @@ namespace WeatherCore
             label2.Font = font;
             label2.Text = degrees;
 
-            //label3.Location = new Point(label3.Left - pictureBox1.Left, label3.Top - pictureBox1.Top);
-
-            //label1.BackColor = Color.Transparent;/
-            //label3.BackColor = Color.Transparent;
-
-            //Debug.WriteLine(label3.Location);
-
-            //label1.Location = new Point((this.ClientSize.Width - label1.Width) / 2, label1.Location.Y);
-
-
             string filename = "Ожидается гроза.png"; // значение по умолчанию
             // Установка названия файла в зависимости от условия
             switch (Condition)
@@ -131,6 +121,8 @@ namespace WeatherCore
                     filename = "Гроза.png";
                     break;
             }
+
+            // Получаем из папки ресурсов картинку
             pictureBox1.Image = Image.FromFile(ResourcePathHelper.GetPath("Resources/" + filename));
         }
 

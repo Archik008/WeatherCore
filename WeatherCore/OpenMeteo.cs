@@ -29,6 +29,7 @@ public class WeatherImporter
 
     public async Task<WeatherRoot> FetchAndWriteWeatherAsync(string cityName)
     {
+        // Получаем координаты города 
         string eng_city = cities[cityName];
         var geoUrl = $"https://geocoding-api.open-meteo.com/v1/search?name={Uri.EscapeDataString(eng_city)}&count=1";
         var geoJson = await _http.GetStringAsync(geoUrl);
@@ -42,12 +43,15 @@ public class WeatherImporter
         string latStr = latitude.ToString(CultureInfo.InvariantCulture);
         string lonStr = longitude.ToString(CultureInfo.InvariantCulture);
 
+        // Получаем по координатам погоду и качество воздуха
+
         var forecastUrl = $"https://api.open-meteo.com/v1/forecast?latitude={latStr}&longitude={lonStr}&hourly=temperature_2m,relative_humidity_2m,uv_index,weathercode,windspeed_10m&timezone=auto";
         var airUrl = $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={latStr}&longitude={lonStr}&hourly=pm10,pm2_5,us_aqi&timezone=auto";
 
         var forecastJson = await _http.GetStringAsync(forecastUrl);
         var airJson = await _http.GetStringAsync(airUrl);
 
+        // Десериализуем данные обратно в класс
         var forecast = JsonSerializer.Deserialize<OpenMeteoResponse>(forecastJson);
         var air = JsonSerializer.Deserialize<OpenMeteoAirQualityResponse>(airJson);
 
@@ -62,6 +66,7 @@ public class WeatherImporter
             })
             .ToDictionary(x => x.Time, x => x);
 
+        // По индексу проходимся и берем погоду по часам
         var hourlyData = forecast.Hourly.Time.Select((t, i) => new
         {
             Time = DateTime.Parse(t),
@@ -73,7 +78,7 @@ public class WeatherImporter
             AQI = airByTime.TryGetValue(DateTime.Parse(t), out var aqi) ? aqi : null
         }).ToList();
 
-        var grouped = hourlyData.GroupBy(x => x.Time.Date);
+        var grouped = hourlyData.GroupBy(x => x.Time.Date); // Группируем часы по дате
         var forecastDays = new List<ForecastDay>();
 
         foreach (var dayGroup in grouped)
@@ -151,6 +156,7 @@ public class WeatherImporter
     }
     private string TranslateWeatherCode(int code)
     {
+        // Берем описание погоды по коду
         return code switch
         {
             0 => "Ясно",
@@ -165,6 +171,7 @@ public class WeatherImporter
         };
     }
 
+    // 
     public async Task<CurrentWeather> GetCurrentWeatherAsync(string cityName)
     {
         if (!cities.TryGetValue(cityName, out var englishCityName))
@@ -207,7 +214,6 @@ public class WeatherImporter
             {
                 UsEpaIndex = air?.UsaAqi ?? -1
             },
-            // Добавь свойство "Condition" в CurrentWeather, если нужно
             Condition = new Condition
             {
                 Text = TranslateWeatherCode(current.WeatherCode ?? -1)
@@ -217,6 +223,8 @@ public class WeatherImporter
 
 }
 
+
+// Классы-десерилизаторы
 public class CurrentWeather
 {
     [JsonPropertyName("humidity")]
@@ -232,7 +240,7 @@ public class CurrentWeather
     public AirQuality AirQuality { get; set; }
 
     [JsonPropertyName("condition")]
-    public Condition Condition { get; set; } // <-- Добавь, если не было
+    public Condition Condition { get; set; }
 }
 
 

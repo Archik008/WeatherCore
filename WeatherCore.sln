@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherCore", "WeatherCore\WeatherCore.csproj", "{734248BE-DC7E-42CF-A11A-AD1263789984}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupInstaller", "SetupInstaller\SetupInstaller.vdproj", "{3E2ADCA1-5464-8E98-0C5A-F4BE9EAAEB96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{734248BE-DC7E-42CF-A11A-AD1263789984}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{734248BE-DC7E-42CF-A11A-AD1263789984}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{734248BE-DC7E-42CF-A11A-AD1263789984}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E2ADCA1-5464-8E98-0C5A-F4BE9EAAEB96}.Debug|Any CPU.ActiveCfg = Debug
+		{3E2ADCA1-5464-8E98-0C5A-F4BE9EAAEB96}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
